@@ -1,32 +1,56 @@
-function hitungDiskon() {
+function hitungCashback() {
     // 1. Ambil nilai dari input HTML
     const hargaAsliInput = document.getElementById('hargaAsli').value;
-    const persenDiskonInput = document.getElementById('persenDiskon').value;
+    const statusPartner = document.getElementById('statusPartner').value;
+    const kategoriProduk = document.getElementById('kategoriProduk').value;
     
-    // Konversi nilai input (yang berupa string) menjadi angka
     const hargaAsli = parseFloat(hargaAsliInput);
-    const persenDiskon = parseFloat(persenDiskonInput);
+    let persenCashback = 0; // Default cashback 0%
 
-    // 2. Lakukan Validasi
-    if (isNaN(hargaAsli) || isNaN(persenDiskon) || hargaAsli <= 0 || persenDiskon < 0 || persenDiskon > 100) {
-        alert("Mohon masukkan Harga Asli yang valid dan Persentase Diskon (0-100%).");
-        // Reset hasil tampilan
-        document.getElementById('uangHemat').textContent = 'Rp 0';
+    // 2. Validasi Awal
+    if (isNaN(hargaAsli) || hargaAsli <= 0) {
+        alert("Mohon masukkan Total Belanja yang valid (lebih dari Rp 0).");
+        // Reset tampilan
+        document.getElementById('persenCashback').textContent = '0%';
+        document.getElementById('nilaiCashback').textContent = 'Rp 0';
         document.getElementById('hargaAkhir').textContent = 'Rp 0';
-        return; // Hentikan fungsi jika input tidak valid
+        return; 
     }
 
-    // 3. Lakukan Perhitungan
-    
-    // Rumus Uang yang dihemat: Harga Asli * (Diskon / 100)
-    const uangHemat = hargaAsli * (persenDiskon / 100);
-    
-    // Rumus Harga Akhir: Harga Asli - Uang yang dihemat
-    const hargaAkhir = hargaAsli - uangHemat;
+    // 3. Cek Syarat Utama (MEMBER/BNI & Kategori Produk)
+    if (statusPartner === 'ya' && kategoriProduk === 'furniture') {
+        // Syarat terpenuhi, lanjutkan ke logika bertingkat
+        
+        if (hargaAsli >= 115000000) {
+            persenCashback = 15;
+        } else if (hargaAsli >= 90000000) {
+            persenCashback = 12;
+        } else if (hargaAsli >= 60000000) {
+            persenCashback = 10;
+        } else if (hargaAsli >= 35000000) {
+            persenCashback = 8;
+        } else if (hargaAsli >= 18000000) {
+            persenCashback = 5;
+        } else {
+            // Cashback 3% TANPA MINIMAL BELANJA (jika syarat utama terpenuhi)
+            persenCashback = 3;
+        }
+        
+    } else {
+        // Jika salah satu syarat utama (status atau kategori) tidak terpenuhi, cashback tetap 0%
+        persenCashback = 0;
+    }
 
-    // 4. Tampilkan Hasil
+    // 4. Lakukan Perhitungan Cashback
     
-    // Fungsi pembantu untuk format mata uang Rupiah
+    // Rumus Nilai Cashback: Total Belanja * (Persen Cashback / 100)
+    const nilaiCashback = hargaAsli * (persenCashback / 100);
+    
+    // Rumus Harga Akhir: Total Belanja - Nilai Cashback (untuk simulasi pembayaran)
+    const hargaAkhir = hargaAsli - nilaiCashback;
+
+    // 5. Tampilkan Hasil (dengan format Rupiah)
+    
     const formatRupiah = (angka) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -35,6 +59,7 @@ function hitungDiskon() {
         }).format(angka);
     };
 
-    document.getElementById('uangHemat').textContent = formatRupiah(uangHemat);
+    document.getElementById('persenCashback').textContent = `${persenCashback}%`;
+    document.getElementById('nilaiCashback').textContent = formatRupiah(nilaiCashback);
     document.getElementById('hargaAkhir').textContent = formatRupiah(hargaAkhir);
 }
