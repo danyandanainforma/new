@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Promo Sederhana</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <h1>Kalkulator Diskon</h1>
+    
+    <div class="calculator-container">
+        <label for="hargaAsli">Harga Asli (Rp):</label>
+        <input type="number" id="hargaAsli" placeholder="Contoh: 100000" min="0">
+        
+        <label for="persenDiskon">Persentase Diskon (%):</label>
+        <input type="number" id="persenDiskon" placeholder="Contoh: 20" min="0" max="100">
+        
+        <button onclick="hitungDiskon()">Hitung Diskon</button>
+        
+        <hr>
+        
+        <h2>Hasil Perhitungan</h2>
+        <p>Anda Hemat: <span id="uangHemat">Rp 0</span></p>
+        <p>Harga Akhir: <span id="hargaAkhir">Rp 0</span></p>
+    </div>
+
+    <script src="script.js"></script> 
+</body>
+</html>
